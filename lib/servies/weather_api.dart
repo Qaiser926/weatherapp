@@ -4,13 +4,11 @@ import 'package:wheather_app/model/current_weather_model.dart';
 import 'package:wheather_app/model/day_weather_model.dart';
 
 
-
 getWeatherData(lat,long)async{
   var link="https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$long&appid=$apiKey&units=metric";
   var res=await http.get(Uri.parse(link));
   if(res.statusCode==200){
     var data=weatherModelClassFromJson(res.body.toString());
-    print(data);
     return data;
   }
 }
@@ -20,7 +18,6 @@ getDayWeatherData(lat,long)async{
   var res=await http.get(Uri.parse(linkDay));
   if(res.statusCode==200){
     var data=weatherDayModelClassFromJson(res.body.toString());
-    print(data);
     return data;
   }
 }

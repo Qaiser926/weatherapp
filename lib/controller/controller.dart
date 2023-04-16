@@ -49,5 +49,5 @@ class ThemeController extends GetxController{
       isLoading.value=true;
     });
   }
-  
+
 }

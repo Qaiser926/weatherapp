@@ -39,7 +39,8 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body:
-    Obx(() =>controller.isLoading.value==true?  FutureBuilder(
+    Obx(() =>controller.isLoading.value==true? 
+     FutureBuilder(
       future: controller.currentWeatherData,
       builder: (context,AsyncSnapshot snapshot){
          WeatherModelClass data=snapshot.data;
@@ -134,47 +135,7 @@ return   "No Data Exit".text.makeCentered();
               10.heightBox,
               Divider(),
               10.heightBox,
-               FutureBuilder(
-                future: controller.dayWeatherData,
-                builder: (context,AsyncSnapshot snapshot){
-                  WeatherDayModelClass data=snapshot.data;
-                if(!snapshot.hasData){
-                  return "No Data Exit".text.make();
-                }
-                if(snapshot.connectionState==ConnectionState.waiting){
-                  return Center(child: CircularProgressIndicator(),);
-                }
-                return   SizedBox(
-                height: 160,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
-                  // itemCount: data.list?.length,
-                  itemCount: data.list.length>6?6:data.list.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    var time=DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(data.list[index].dt*1000));
-                    return Container(
-                      margin: EdgeInsets.all(4),
-                      height: 90,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: cardColor.withOpacity(0.3)),
-                      child: Column(
-                        children: [
-                          10.heightBox,
-                          "$time".text.gray400.make(),
-                          Image.asset("assets/weather/${data.list[index].weather[0].icon}.png"),
-                          "${data.list[index].main.temp}$degree".text.gray400.make()
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              );
-             
-                },
-              ),
+               day_weather_row(controller),
              
               10.heightBox,
               Divider(),
@@ -241,7 +202,54 @@ return   "No Data Exit".text.makeCentered();
    
       },
      ):Center(child: CircularProgressIndicator(),)
+ 
    )
     );
+  }
+
+  FutureBuilder<dynamic> day_weather_row(ThemeController controller) {
+    return FutureBuilder(
+              future: controller.dayWeatherData,
+              builder: (context,AsyncSnapshot snapshot){
+                WeatherDayModelClass data=snapshot.data;
+                // WeatherDayModelClass data=snapshot.data;
+              if(!snapshot.hasData){
+                return "No Data Exit".text.make();
+              }
+              if(snapshot.connectionState==ConnectionState.waiting){
+                return Center(child: CircularProgressIndicator(),);
+              }
+              return   SizedBox(
+              height: 160,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                itemCount: data.list!.length>6?6:data.list?.length,
+              
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  var time=DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse((data.list![index].dt.toString()))*1000));
+                  return Container(
+                    margin: EdgeInsets.all(4),
+                    height: 90,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: cardColor.withOpacity(0.1)),
+                    child: Column(
+                      children: [
+                        10.heightBox,
+                        // "${data.main.temp}".text.make()
+                        "$time".text.gray400.make(),
+                        Image.asset("assets/weather/${data.list![index].weather![0].icon}.png"),
+                        "${data.list![index].main!.temp.toString()}$degree".text.gray400.make()
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+           
+              },
+            );
   }
 }
